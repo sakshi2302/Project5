@@ -1,0 +1,49 @@
+<%- include('header') %>
+
+<class class="container mainbox">
+    <div class="row justify-content-md-center">
+        <div class="col-12">
+          <h1><%= title%></h1>
+        </div>
+
+        <div class="col-8">
+          <a href="/course-add" class="btn btn-sm btn-success">Add Course</a>
+        </div>
+
+        <div class="col-8" style="margin: 2rem;padding: 2rem;">
+            <table class="table table-hover">
+                
+                <thead>
+                    <tr class="table-dark">
+                      <th scope="col">Course ID</th>
+                      <th scope="col">Course Name</th>
+                      <th scope="col">University Name</th>
+                      <th scope="col">Department Name</th>
+                      <th scope="col">Institute Name</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <% courses.forEach((course)=>{ %>
+                    <tr>
+                        <td><%=course.courseID %></td>
+                        <td><%=course.courseName %></td>
+                        <td><%=course.universityName %></td>
+                        <td><%=course.departmentName %></td>
+                        <td><%=course.instituteName %></td>
+                        
+                        <td>
+                            <a href="/course-edit/<%=course.courseID %>" class="btn btn-sm btn-info">Edit</a>
+                            <a href="/course-delete/<%=course.courseID %>" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                  </tbody>
+                 <%});%>
+            </table>    
+        </div>
+
+    </div>    
+</class>
+
+
+<%- include('footer') %>

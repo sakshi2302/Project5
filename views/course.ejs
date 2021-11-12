@@ -1,0 +1,151 @@
+<%- include('header') %>
+  <!-- <script src="../formControl.js" defer></script> -->
+
+  <div class="container mainbox">
+    <div class="row justify-content-md-center">
+      <div class="col-12">
+        <h1>
+          <%= title%>
+        </h1>
+      </div>
+
+      <div class="col-8" style="margin: 2rem;padding: 5rem;">
+        <form name="subject-form" method="POST" class="row g-2">
+          <div class="col-md-6">
+            <label for="subject_code" class="form-label">Course ID</label>
+            <input type="text" class="form-control" name="scode" id="subject_code" maxlength="10" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="subject_name" class="form-label">Course Name</label>
+            <input type="text" class="form-control" name="sname" id="subject_name" required>
+          </div>
+
+          <center>
+          <div class="col-md-6">
+            <label for="uname" class="form-label">University Name</label>
+            <select class="form-select" name="uname" id="universityname" aria-describedby="uname"
+              onchange="populate(this.id,'dname','iname')" required>
+              <option selected disabled value="">Choose</option>
+            </select>
+          </div>
+          <br><br>  
+          
+            
+          <fieldset class="form-group col-md-12" id="dname" >
+            
+          </fieldset>
+          <br><br>  
+        <fieldset class="col-md-6" id="iname" >
+           
+          </fieldset>
+          <br><br> 
+          </center>
+
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Add Course</button>
+          </div>
+
+      </div>
+      </form>
+    </div>
+
+
+  </div>
+
+  <script>
+    const university = document.getElementById("universityname")
+    const department = document.getElementById("dname")
+    const institute = document.getElementById("iname")
+
+    async function queryFetch1() {
+      return await fetch(`http://localhost:5000/db-data/`).then(response => response.json())
+        .catch((err) => { if (err) return err })
+    }
+
+    async function queryFetch2(query) {
+      return await fetch(`http://localhost:5000/db-data/department/${query}`).then(response => response.json())
+        .catch((err) => { if (err) return err })
+    }
+
+    async function queryFetch3(query) {
+      return await fetch(`http://localhost:5000/db-data/institute/${query}`).then(response => response.json())
+        .catch((err) => { if (err) return err })
+    }
+
+    queryFetch1()
+      .then(data => {
+        console.log(data)
+
+        data.forEach(un => {
+          const option = document.createElement("option")
+          option.id=un.universityID
+          option.value = un.universityName
+          option.innerText = un.universityName
+          university.append(option)
+        })
+      })
+
+    function populate(i1, i2, i3) {
+
+      var i11 = document.getElementById(i1);
+      var i22 = document.getElementById(i2);
+      var i33 = document.getElementById(i3);
+
+      let uni = i11[i11.selectedIndex].id
+      console.log(uni);
+
+      queryFetch2(uni)
+        .then(data => {
+          console.log(data)
+
+          data.forEach(un => {
+                  var selecttag1=document.createElement("input");
+                  selecttag1.setAttribute("type", "radio");
+                  selecttag1.setAttribute("name", "dname");
+                  selecttag1.setAttribute("value", un.departmentName);
+                  selecttag1.setAttribute("id",un.departmentID);
+                  selecttag1.setAttribute("class","form-check-input");
+                  selecttag1.setAttribute("style","margin-right:2rem");
+
+
+                var lbl1 = document.createElement("label");
+                // lbl1.setAttribute("style","margin-right:1rem")
+                lbl1.setAttribute("class","form-check-label");
+                lbl1.innerHTML = un.departmentName;
+                i22.appendChild(lbl1);
+                i22.appendChild(selecttag1);
+        })
+    })
+
+    queryFetch3(uni)
+        .then(data => {
+          console.log(data)
+
+          data.forEach(un => {
+                  var selecttag1=document.createElement("input");
+                  selecttag1.setAttribute("type", "checkbox");
+                  selecttag1.setAttribute("name", "iname");
+                  selecttag1.setAttribute("value", un.instituteName);
+                  selecttag1.setAttribute("id",un.instituteID);
+                  selecttag1.setAttribute("class","form-check-input");
+                  selecttag1.setAttribute("style","margin-right:2rem");
+
+
+                var lbl1 = document.createElement("label");
+                lbl1.setAttribute("class","form-check-label");
+                lbl1.innerHTML = un.instituteName;
+                i33.appendChild(lbl1);
+                i33.appendChild(selecttag1);
+        })
+    })
+
+                  
+
+    }
+
+  </script>
+
+
+
+  <%- include('footer') %>
